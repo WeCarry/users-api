@@ -1,0 +1,15 @@
+dev:
+  subnetIds:
+    - subnet-0e3ccc23004c75138
+  securityGroupIds:
+    - sg-06e3f85c3e907004e
+staging:
+  subnetIds:
+    - subnet-0e3ccc23004c75138
+  securityGroupIds:
+    - sg-06e3f85c3e907004e
+prod:
+  subnetIds:
+    - subnet-0e3ccc23004c75138
+  securityGroupIds:
+    - sg-042afdb37d8342292

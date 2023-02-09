@@ -1,0 +1,30 @@
+#set ($dollar = "$")
+#set ($dot = ".")
+#set ($id = $input.params("id"))
+#set ($field = $input.params("field"))
+#set ($itemId = $input.params("itemId"))
+#set ($count = 0)
+{
+	"id": "$util.escapeJavaScript($id).replaceAll("\\'","'")" ,
+	"_field": "$util.escapeJavaScript($field).replaceAll("\\'","'")" ,
+  "_method": "$context.httpMethod" ,
+	#if ($context.authorizer.session != $undefined)
+  "_session": $context.authorizer.session ,
+  #end
+  "item": {
+  #if ($itemId != $undefined)
+    #set ($count = $count + 1)
+    "id": "$util.escapeJavaScript($itemId).replaceAll("\\'","'")"
+  #end
+
+  #foreach($key in $input.path('$').keySet())
+    #if ($key != "id" or ($key == "id" and $itemId == $undefined) )
+      #if ($count > 0)
+      ,
+      #end
+      #set ($count = $count + 1)
+      "$key": $input.json("$dollar$dot$key")
+    #end
+  #end
+  }
+}

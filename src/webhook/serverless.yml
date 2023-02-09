@@ -1,0 +1,23 @@
+name: ${self:service}-webhook-${self:provider.stage}
+handler: src/webhook/handler.handler
+timeout: 60
+events:
+  - sns:
+      topicName: professional-webhook-${self:provider.stage}
+      displayName: Professional Webhook SNS
+#  - http:
+#      path: professional/webhook
+#      authorizer:
+#        name: professional-token-authorize
+#        arn:
+#          Fn::ImportValue: ${opt:stage,'dev'}-TokenAuthorizeFunction
+#        identitySource: method.request.header.X-API-key
+#      method: post
+#      integration: lambda
+#      reqValidatorName:
+#        Fn::ImportValue: ${opt:stage,'dev'}-ApiGatewayRestOnlyBody
+#      cors: true
+#      request: 
+#        passThrough: NEVER
+#        template:
+#          application/json: $input.json('$')

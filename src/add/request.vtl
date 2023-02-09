@@ -1,0 +1,13 @@
+#set ($dollar = "$")
+#set ($dot = ".")
+{
+  "ipAddress" : "$context.identity.sourceIp"
+	#if ($input.params().header.get("authorization") != $undefined)
+  , "_jwt": "$util.escapeJavaScript($input.params().header.get("authorization")).replaceAll("\\'","'")"
+  #end
+  #foreach($key in $input.path('$').keySet())
+    #if ($key != "ipAddress" && $key != "_jwt")
+      , "$key": $input.json("$dollar$dot$key")
+    #end
+  #end
+}

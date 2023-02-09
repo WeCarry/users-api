@@ -1,0 +1,985 @@
+{
+	"$schema": "http://json-schema.org/draft-04/schema#",
+	"type": "object",
+	"properties": {
+		"_id": {
+			"description": "The user ID.",
+			"type": "string",
+			"minLength": 1
+		},
+		"firstName": {
+			"description": "The user's first name.",
+			"type": "string",
+			"minLength": 1
+		},
+		"lastName": {
+			"description": "The user's first name.",
+			"type": "string",
+			"minLength": 1
+		},
+		"dateOfBirth": {
+			"description": "The user's date of birth.",
+			"type": "integer"
+		},
+		"gender": {
+			"description": "The user's gender.",
+			"type": "string",
+			"enum": ["Male", "Female", "Other"]
+		},
+		"email": {
+			"description": "The user's email address. This is also the username of the user.",
+			"type": "string",
+			"minLength": 1
+		},
+		"linkedInId": {
+			"description": "The user's linkedIn ID.",
+			"type": "string"
+		},
+		"facebookId": {
+			"description": "The user's facebook ID.",
+			"type": "string"
+		},
+		"phoneNumber": {
+			"description": "The user's phone number.",
+			"type": "string",
+			"pattern": "^[0-9]*$"
+		},
+		"address": {
+			"description": "The user's home address.",
+			"type": "object",
+			"properties": {
+				"address1": {
+					"description": "Line 1 of the address.",
+					"type": "string",
+					"minLength": 1
+				},
+				"address2": {
+					"description": "Line 2 of the address.",
+					"type": "string"
+				},
+				"city": {
+					"description": "The address city.",
+					"type": "string",
+					"minLength": 1
+				},
+				"state": {
+					"description": "The address state.",
+					"type": "string",
+					"minLength": 1
+				},
+				"zip": {
+					"description": "The address zip.",
+					"type": "string",
+					"minLength": 1,
+					"pattern": "^[0-9]*$"
+				}
+			},
+			"required": ["address1", "city", "state", "zip"],
+			"additionalProperties": false
+		},
+		"ssn": {
+			"description": "The last 4 digits of the user's SSN.",
+			"type": "string",
+			"minLength": 4,
+			"maxLength": 4
+		},
+		"deactivatedAt": {
+			"description": "The date the user was deactivated.",
+			"type": "integer"
+		},
+		"emailCommunicationEnabled": {
+			"description": "Whether email communication is enabled for this user.",
+			"type": "boolean"
+		},
+		"profilePicUrl": {
+			"description": "The URL of the user's profile picture.",
+			"type": "string",
+			"minLength": 1
+		},
+		"profilePicThumbUrl": {
+			"description": "The URL of the user's profile picture thumbnail.",
+			"type": "string",
+			"minLength": 1
+		},
+		"timezone": {
+			"description": "The user's default timezone.",
+			"type": "string",
+			"minLength": 1
+		},
+		"languages": {
+			"description": "A list of languages that the user is fluent in.",
+			"type": "array",
+			"items": {
+				"type": "string",
+				"minLength": 1
+			}
+		},
+		"briefcase": {
+			"type": "object",
+			"properties": {
+				"activityWork": {
+					"description": "A list of professional activity work.",
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"id": {
+								"description": "The ID of the professional activity work.",
+								"type": "string"
+							},
+							"title": {
+								"description": "The professional activity work title.",
+								"type": "string",
+								"minLength": 1
+							},
+							"startDate": {
+								"description": "The start date of the professional activity work.",
+								"type": "integer"
+							},
+							"endDate": {
+								"description": "The end date of the professional activity work.",
+								"type": "integer"
+							},
+							"fileUrl": {
+								"description": "The URL of the professional activity work file.",
+								"type": "string",
+								"minLength": 1
+							},
+							"projectDetailsUrl": {
+								"description": "The URL of the professional activity work.",
+								"type": "string",
+								"minLength": 1
+							}
+						},
+						"additionalProperties": false
+					}
+				},
+				"additionalCertifications": {
+					"description": "A list of additional certificates.",
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"id": {
+								"description": "The unique identifier of the additional certification. (i.e. 1, 2, 3)",
+								"type": "string"
+							},
+							"name": {
+								"description": "The name of the additional certification. (CPR, BLS, ALS/ACLS, PALS, TNCC, STABLE, Others (string))",
+								"type": "string",
+								"minLength": 1
+							},
+							"expirationDate": {
+								"description": "The expiration date of the additional certification.",
+								"type": "integer"
+							},
+							"eCardNumber": {
+								"description": "The e-card number of the additional certification.",
+								"type": "string",
+								"minLength": 1
+							},
+							"frontFileUrl": {
+								"description": "The URL of the additional certification front file.",
+								"type": "string",
+								"minLength": 1
+							},
+							"backFileUrl": {
+								"description": "The URL of the additional certification back file.",
+								"type": "string",
+								"minLength": 1
+							},
+							"uploadedAt": {
+								"description": "The date the additional certification file was uploaded.",
+								"type": "integer"
+							}
+						},
+						"required": ["name"],
+						"additionalProperties": false
+					},
+					"minItems": 1
+				},
+				"additionalCertificationHistory": {
+					"description": "A list of additional certification history.",
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"name": {
+								"description": "The name of the additional certification.",
+								"type": "string",
+								"minLength": 1
+							},
+							"frontFileUrl": {
+								"description": "The URL of the additional certification front file.",
+								"type": "string",
+								"minLength": 1
+							},
+							"backFileUrl": {
+								"description": "The URL of the additional certification back file.",
+								"type": "string",
+								"minLength": 1
+							},
+							"createdAt": {
+								"description": "The date the additional certification file was uploaded.",
+								"type": "integer"
+							}
+						},
+						"required": ["name", "createdAt"],
+						"additionalProperties": false
+					},
+					"minItems": 1
+				},
+				"additionalDocuments": {
+					"description": "A list of additional documents.",
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"id": {
+								"description": "The ID of the additional document.",
+								"type": "string"
+							},
+							"name": {
+								"description": "The name of the additional document.",
+								"type": "string",
+								"minLength": 1
+							},
+							"fileUrl": {
+								"description": "The URL of the additional document file.",
+								"type": "string",
+								"minLength": 1
+							},
+							"uploadedAt": {
+								"description": "The date the additional document was uploaded.",
+								"type": "integer"
+							}
+						},
+						"required": ["id"],
+						"additionalProperties": false
+					}
+				},
+				"certifications": {
+					"description": "A list of certifications.",
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"id": {
+								"description": "The ID of the certification.",
+								"type": "string",
+								"minLength": 1
+							},
+							"name": {
+								"description": "The name of the certification.",
+								"type": "string",
+								"minLength": 1
+							},
+							"certifyingBody": {
+								"description": "The certifying body of the certification.",
+								"type": "string",
+								"minLength": 1
+							},
+							"expirationDate": {
+								"description": "The expiration date of the certification.",
+								"type": "integer"
+							},
+							"digitalBadgeUrl": {
+								"description": "The digital badge URL of the certification.",
+								"type": "string",
+								"minLength": 1
+							},
+							"courseWorkFileUrl": {
+								"description": "The URL of the certification course work file.",
+								"type": "string",
+								"minLength": 1
+							},
+							"fileUrl": {
+								"description": "The URL of the certification file.",
+								"type": "string",
+								"minLength": 1
+							},
+							"uploadedAt": {
+								"description": "The date the certification file was uploaded.",
+								"type": "integer"
+							}
+						},
+						"required": ["name", "certifyingBody"],
+						"additionalProperties": false
+					}
+				},
+				"certificationHistory": {
+					"description": "A list of certification history.",
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"name": {
+								"description": "The name of the certification.",
+								"type": "string",
+								"minLength": 1
+							},
+							"fileUrl": {
+								"description": "The URL of the certification file.",
+								"type": "string",
+								"minLength": 1
+							},
+							"uploadedAt": {
+								"description": "The date the certification file was uploaded.",
+								"type": "integer"
+							},
+							"createdAt": {
+								"description": "The date the certification history was created.",
+								"type": "integer"
+							}
+						},
+						"required": ["name", "createdAt"],
+						"additionalProperties": false
+					},
+					"minItems": 1
+				},
+				"competencies": {
+					"description": "A list of competencies.",
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"id": {
+								"description": "The ID of the competency.",
+								"type": "string"
+							},
+							"title": {
+								"description": "The title of the competency.",
+								"type": "string",
+								"minLength": 1
+							},
+							"startDate": {
+								"description": "The start date of the competency.",
+								"type": "integer"
+							},
+							"endDate": {
+								"description": "The end date of the competency.",
+								"type": "integer"
+							},
+							"moduleContentUrl": {
+								"description": "The module content URL of the competency.",
+								"type": "string",
+								"minLength": 1
+							},
+							"fileUrl": {
+								"description": "The URL of the competency file.",
+								"type": "string",
+								"minLength": 1
+							}
+						},
+						"additionalProperties": false
+					}
+				},
+				"completedAt": {
+					"description": "The date the briefcase was completed (license, resume, references and skills checklists)",
+					"type": "integer"
+				},
+				"consentedAt": {
+					"description": "The date the user consented.",
+					"type": "integer"
+				},
+				"continuingEducation": {
+					"description": "A list of continuing education.",
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"id": {
+								"description": "The ID of the continuing education.",
+								"type": "string"
+							},
+							"title": {
+								"description": "The title of the continuing education.",
+								"type": "string",
+								"minLength": 1
+							},
+							"startDate": {
+								"description": "The start date of the continuing education.",
+								"type": "integer"
+							},
+							"endDate": {
+								"description": "The end date of the continuing education.",
+								"type": "integer"
+							},
+							"isInternal": {
+								"description": "Whether the continuing education was internal or not.",
+								"type": "boolean"
+							},
+							"courseWorkUrl": {
+								"description": "The course work URL of the continuing education.",
+								"type": "string",
+								"minLength": 1
+							},
+							"certificateUrl": {
+								"description": "The course work URL of the continuing education.",
+								"type": "string",
+								"minLength": 1
+							},
+							"courseWorkFileUrl": {
+								"description": "The URL of the course work file.",
+								"type": "string",
+								"minLength": 1
+							}
+
+						},
+						"required": ["title"],
+						"additionalProperties": false
+					}
+				},
+				"currentStep": {
+					"description": "The current step in completing the briefcase. The value is managed by the UI.",
+					"type": "integer",
+					"minimum": 0
+				},
+				"driversLicense": {
+					"description": "The user's drivers license.",
+					"type": "object",
+					"properties": {
+						"state": {
+							"description": "The state that issued the dirvers license.",
+							"type": "string",
+							"minLength": 1
+						},
+						"number": {
+							"description": "The drivers license number",
+							"type": "string",
+							"minLength": 1
+						},
+						"expirationDate": {
+							"description": "The expiration date of the drivers license",
+							"type": "integer"
+						},
+						"fileUrl": {
+							"description": "The URL of the drivers license document.",
+							"type": "string",
+							"minLength": 1
+						},
+						"uploadedAt": {
+							"description": "The date the drivers license document was uploaded.",
+							"type": "integer"
+						}
+					},
+					"additionalProperties": false
+				},
+				"education": {
+					"description": "A list of education programs the user attended.",
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"id": {
+								"description": "The ID of the education program.",
+								"type": "string"
+							},
+							"institute": {
+								"description": "The institute.",
+								"type": "string",
+								"minLength": 1
+							},
+							"yearFrom": {
+								"description": "The year that the user started the education program.",
+								"type": "integer",
+								"minimum": 1
+							},
+							"yearTo": {
+								"description": "The year that the user finished the education program.",
+								"type": "integer",
+								"minimum": 1
+							},
+							"programName": {
+								"description": "The name of the education program.",
+								"type": "string",
+								"minLength": 1
+							},
+							"courseWorkUrl": {
+								"description": "A URL link to the education program's course work.",
+								"type": "string",
+								"minLength": 1
+							},
+							"status": {
+								"description": "The status of the education program.",
+								"type": "string",
+								"minLength": 1
+							},
+							"courseWorkFileUrl": {
+								"description": "A URL link to the course work.",
+								"type": "string",
+								"minLength": 1
+							}
+						},
+						"additionalProperties": false
+					}
+				},
+				"educationDocuments": {
+					"description": "A list of education documents.",
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"id": {
+								"description": "The ID of the education document.",
+								"type": "string"
+							},
+							"name": {
+								"description": "The name of the education document.",
+								"type": "string",
+								"minLength": 1
+							},
+							"fileUrl": {
+								"description": "The URL of the education document file.",
+								"type": "string",
+								"minLength": 1
+							}
+						},
+						"required": ["id"],
+						"additionalProperties": false
+					}
+				},
+				"educationLevel": {
+					"description": "The user's education level.",
+					"type": "string"
+				},
+				"ehrSkills": {
+					"description": "A list of EHR skills.",
+					"type": "array",
+					"items": {
+						"type": "string",
+						"minLength": 1
+					}
+				},
+				"facilities": {
+					"description": "A list of recent facilities.",
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"id": {
+								"description": "The ID of the recent facility.",
+								"type": "string"
+							},
+							"name": {
+								"description": "The name of the recent facility.",
+								"type": "string",
+								"minLength": 1
+							},
+							"city": {
+								"description": "The city that the recent facility resides in.",
+								"type": "string",
+								"minLength": 1
+							},
+							"state": {
+								"description": "The state that the recent facility resides in.",
+								"type": "string",
+								"minLength": 1
+							}
+						},
+						"additionalProperties": false
+					}
+				},
+				"healthDocuments": {
+					"description": "The state that the recent facility resides in.",
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"id": {
+								"description": "The ID of the health document.",
+								"type": "string"
+							},
+							"name": {
+								"description": "The name of the health document.",
+								"type": "string",
+								"minLength": 1
+							},
+							"reason": {
+								"description": "The reason why the health screening was performed.",
+								"type": "string",
+								"minLength": 1
+							},
+							"date": {
+								"description": "The date the health screening/vaccination was performed.",
+								"type": "integer"
+							},
+							"fileUrl": {
+								"description": "The URL of the health document file.",
+								"type": "string",
+								"minLength": 1
+							},
+							"uploadedAt": {
+								"description": "The date the health document was uploaded.",
+								"type": "integer"
+							}
+						},
+						"required": ["id", "name"],
+						"additionalProperties": false
+					}
+				},
+				"liabilityInsurance": {
+					"description": "Liability insurance details.",
+					"type": "object",
+					"properties": {
+						"company": {
+							"description": "The company that issued the liability insurance.",
+							"type": "string",
+							"minLength": 1
+						},
+						"policyNumber": {
+							"description": "The policy number of the liability insurance.",
+							"type": "string",
+							"minLength": 1
+						},
+						"expirationDate": {
+							"description": "The date the liability insurance expires.",
+							"type": "integer"
+						},
+						"fileUrl": {
+							"description": "The URL of the liability insurance document.",
+							"type": "string",
+							"minLength": 1
+						},
+						"uploadedAt": {
+							"description": "The date the liability insurance document was uploaded.",
+							"type": "integer"
+						}
+					},
+					"additionalProperties": false
+				},
+				"licensedAt": {
+					"description": "The date the user was originally licensed.",
+					"type": "integer"
+				},
+				"licenses": {
+					"description": "A list of professional licenses.",
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"id": {
+								"description": "The ID of the license.",
+								"type": "string",
+								"minLength": 1
+							},
+							"licenseType": {
+								"description": "The professional license type.",
+								"type": "string",
+								"minLength": 1
+							},
+							"licenseBody": {
+								"description": "The licensing body that issued the license.",
+								"type": "string",
+								"minLength": 1
+							},
+							"issueDate": {
+								"description": "The date the license was issued.",
+								"type": "integer"
+							},
+							"expirationDate": {
+								"description": "The date the license expires.",
+								"type": "integer"
+							},
+							"licenseNumber": {
+								"description": "The license number.",
+								"type": "string",
+								"minLength": 1
+							},
+							"isCompact": {
+								"description": "Whether the license is compact. If the license is compact the user is allowed to practice in other compact states.",
+								"type": "boolean"
+							},
+							"fileUrl": {
+								"description": "The URL of the license document.",
+								"type": "string",
+								"minLength": 1
+							},
+							"uploadedAt": {
+								"description": "The date the license document was uploaded.",
+								"type": "integer"
+							}
+						},
+						"required": ["licenseType", "licenseBody", "expirationDate", "licenseNumber", "isCompact"],
+						"additionalProperties": false
+					}
+				},
+				"licenseHistory": {
+					"description": "A list of license history.",
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"licenseType": {
+								"description": "The professional license type.",
+								"type": "string",
+								"minLength": 1
+							},
+							"licenseBody": {
+								"description": "The licensing body that issued the license.",
+								"type": "string",
+								"minLength": 1
+							},
+							"fileUrl": {
+								"description": "The URL of the license document.",
+								"type": "string",
+								"minLength": 1
+							},
+							"uploadedAt": {
+								"description": "The date the license document was uploaded.",
+								"type": "integer"
+							},
+							"createdAt": {
+								"description": "The date the license history was created.",
+								"type": "integer"
+							}
+						},
+						"required": ["name", "createdAt"],
+						"additionalProperties": false
+					},
+					"minItems": 1
+				},
+				"organizationMembership": {
+					"description": "A list of organization memberships.",
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"id": {
+								"description": "The ID of the organization membership.",
+								"type": "string"
+							},
+							"name": {
+								"description": "The name of the organization membership.",
+								"type": "string",
+								"minLength": 1
+							},
+							"startDate": {
+								"description": "The date membership started.",
+								"type": "integer"
+							},
+							"endDate": {
+								"description": "The date membership ends.",
+								"type": "integer"
+							}
+						},
+						"required": ["name"],
+						"additionalProperties": false
+					}
+				},
+				"references": {
+					"description": "A list of professional references.",
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"id": {
+								"description": "The ID of the professional reference.",
+								"type": "string"
+							},
+							"title": {
+								"description": "The title of the professional reference.",
+								"type": "string",
+								"minLength": 1
+							},
+							"organization": {
+								"description": "The organization that the professional reference is for.",
+								"type": "string",
+								"minLength": 1
+							},
+							"firstName": {
+								"description": "The first name of the professional reference.",
+								"type": "string",
+								"minLength": 1
+							},
+							"lastName": {
+								"description": "The last name of the professional reference.",
+								"type": "string",
+								"minLength": 1
+							},
+							"phoneNumber": {
+								"description": "The phone number of the professional reference.",
+								"type": "string",
+								"minLength": 1
+							},
+							"email": {
+								"description": "The email address of the professional reference.",
+								"type": "string",
+								"minLength": 1
+							}
+						},
+						"additionalProperties": false
+					}
+				},
+				"specialties": {
+					"description": "A list of specialties.",
+					"type": "array",
+					"items": {
+						"type": "string",
+						"minLength": 1
+					}
+				},
+				"vehicleInsurance": {
+					"description": "Vehicle insurance details.",
+					"type": "object",
+					"properties": {
+						"name": {
+							"description": "The name of the person that is on the vehicle insurance.",
+							"type": "string",
+							"minLength": 1
+						},
+						"company": {
+							"description": "The company that issued the vehicle insurance.",
+							"type": "string",
+							"minLength": 1
+						},
+						"policyNumber": {
+							"description": "The policy number.",
+							"type": "string",
+							"minLength": 1
+						},
+						"expirationDate": {
+							"description": "The date the vehicle insurance expires.",
+							"type": "integer"
+						},
+						"fileUrl": {
+							"description": "The URL of the vehicle insurance document.",
+							"type": "string",
+							"minLength": 1
+						},
+						"uploadedAt": {
+							"description": "The date the vehicle insurance document was uploaded.",
+							"type": "integer"
+						}
+					},
+					"additionalProperties": false
+				},
+				"w9": {
+					"description": "The user's W9 number.",
+					"type": "string"
+				},
+				"workExperience": {
+					"description": "The user's work experience.",
+					"type": "object",
+					"properties": {
+						"resumeFileUrl": {
+							"description": "The URL of the user's resume.",
+							"type": "string",
+							"minLength": 1
+						},
+						"linkedInUrl": {
+							"description": "The URL of the user's linkedIn profile.",
+							"type": "string",
+							"minLength": 1
+						},
+						"uploadedAt": {
+							"description": "The date the resume file was uploaded.",
+							"type": "integer"
+						}
+					},
+					"additionalProperties": false
+				},
+				"yearsOfExperience": {
+					"description": "The number of years of experience the user has.",
+					"type": "string"
+				},
+				"emergencyContact": {
+					"description": "The user's emergency contact.",
+					"type": "object",
+					"properties": {
+						"name": {
+							"description": "The name of the emergency contact.",
+							"type": "string"
+						},
+						"relationship": {
+							"description": "The relationship of the emergency contact to the user.",
+							"type": "string"
+						},
+						"email": {
+							"description": "The email of the emergency contact.",
+							"type": "string"
+						},
+						"phoneNumber": {
+							"description": "The emergency contact's phone number.",
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				}
+			}
+		},
+		"jobs": {
+			"type": "object",
+			"properties": {
+				"cancelledJobs": {
+					"description": "The number of jobs the user has cancelled.",
+					"type": "integer",
+					"minimum": 0
+				},
+				"confirmedJobs": {
+					"description": "The number of jobs the user has been confirmed for.",
+					"type": "integer",
+					"minimum": 0
+				},
+				"workCities": {
+					"description": "The list of work cities.",
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"city": {
+								"description": "The name of the city.",
+								"type": "string",
+								"minLength": 1
+							},
+							"state": {
+								"description": "The state.",
+								"type": "string",
+								"minLength": 1
+							},
+							"coordinates": {
+								"description": "The longitude/latitude of the city.",
+								"type": "array",
+								"items": {
+									"type": "number",
+									"minimum": -180,
+									"maximum": 180
+								},
+								"minItems": 2,
+								"maxItems": 2
+							}
+						},
+						"required": ["city", "state", "coordinates"],
+						"additionalProperties": false
+					}
+				},
+				"workStates": {
+					"description": "The list of work states.",
+					"type": "array",
+					"items": {
+						"type": "string",
+						"minLength": 1
+					}
+				},
+				"workDistance": {
+					"description": "The distance (in miles) from the work cities to match the user to jobs.",
+					"type": "integer",
+					"minimum": 0
+				},
+				"newJobEmail": {
+					"description": "The user's email preference when a new job is posted.\r\n0 - No Email\r\n1 - Daily\r\n2 - Realtime\r\n3 - Weekly",
+					"type": "integer",
+					"minimum": 0,
+					"maximum": 3
+				},
+				"newJobSms": {
+					"description": "The user's SMS preference when a new job is posted.",
+					"type": "boolean"
+				}
+			}
+		}
+	},
+	"required": [
+		"_id"
+	]
+}

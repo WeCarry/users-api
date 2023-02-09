@@ -1,0 +1,22 @@
+#set ($dollar = "$")
+#set ($dot = ".")
+#set ($id = $input.params("id"))
+{
+	"id": "$util.escapeJavaScript($id).replaceAll("\\'","'")"
+	#if ($input.params().header.get("authorization") != $undefined)
+  , "_jwt": "$util.escapeJavaScript($input.params().header.get("authorization")).replaceAll("\\'","'")"
+  #end
+  #foreach($key in $input.params().querystring.keySet())
+    #if ($key == "select")
+      #if ($input.params().querystring.get($key) == "overview" or $input.params().querystring.get($key) == "full")
+        , "select": "$util.escapeJavaScript($input.params().querystring.get($key))"
+      #else
+        , "select": $input.params().querystring.get($key)
+      #end
+    #end
+
+    #if ($key != "id" and $key != "_jwt" and $key != "select")
+      , "$key": "$util.escapeJavaScript($input.params().querystring.get($key)).replaceAll("\\'","'")"
+    #end
+  #end
+}

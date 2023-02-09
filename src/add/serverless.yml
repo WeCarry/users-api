@@ -1,0 +1,96 @@
+name: ${self:service}-add-${self:provider.stage}
+handler: src/add/handler.handler
+events:
+  - http:
+      path: user
+      method: post
+      integration: lambda
+      reqValidatorName:
+        Fn::ImportValue: ${opt:stage,'dev'}-ApiGatewayRestOnlyBody
+      cors: true
+      request:
+        passThrough: NEVER
+        template:
+          application/json: ${file(src/add/request.vtl)}
+      response:
+        headers:
+          Content-Type: "'application/json'"
+        statusCodes:
+          200:
+            pattern: ''
+          400:
+            pattern: '^\[400\][\s\S]*'
+            template:
+              application/json: ${file(serverless-error-json.vtl)}
+              text/plain: $input.path("$.errorMessage").substring(5)
+          403:
+            pattern: '^\[403\][\s\S]*'
+            template:
+              application/json: ${file(serverless-error-json.vtl)}
+              text/plain: $input.path("$.errorMessage").substring(5)
+          409:
+            pattern: '^\[409\][\s\S]*'
+            template:
+              application/json: ${file(serverless-error-json.vtl)}
+              text/plain: $input.path("$.errorMessage").substring(5)
+          500:
+            pattern: '^\[500\][\s\S]*'
+            template:
+              application/json: ${file(serverless-error-json.vtl)}
+              text/plain: $input.path("$.errorMessage").substring(5)
+      documentation:
+        description: |-
+          Adds a professional.
+
+          ### Security
+          - System Administrator
+          - API User
+          - Organization Admin/Co-Admin
+          - Department Manager
+          - Department User
+          - Guest
+
+          ### Actions
+          - Adds a professional.
+          - Calls organization's update webhook (if exists).
+        requestModels:
+          application/json: ProfessionalAddRequest
+        methodResponses:
+          -
+            statusCode: "200"
+            description:
+            responseModels:
+              "application/json": "ProfessionalResponse"
+          -
+            statusCode: "400"
+            description: |-
+              | Type                        | Message                                                                                                     |
+              | :-------------------------- | ----------------------------------------------------------------------------------------------------------: |
+              |                             | Invalid request body                                                                                        |
+              | UserNotFoundError           | Session user not found.                                                                                     |
+              | OrganizationNotFoundError   | Organization not found.                                                                                     |
+              | PasswordRequiredError       | Password is required.                                                                                       |
+              | InvalidPasswordError        | Password must be at least 8 characters long.                                                                |
+              | InvalidPasswordError        | Password should contain at least one of each Uppercase, Lowercase, Number and Special Character - $@$!%*#?& |
+              | DepartmentNotFoundError     | Department not found.                                                                                       |
+              | AddAffiliationRequiredError | Add affiliation is required.                                                                                |
+            responseModels:
+              "application/json": "ProfessionalError"
+          -
+            statusCode: "403"
+            description: |-
+              This error response is returned when the session user does not have access to the requested resource.
+            responseModels:
+              "application/json": "ProfessionalUnauthorizedError"
+          -
+            statusCode: "409"
+            description: |-
+              This error response is returned when an account already exists.
+            responseModels:
+              "application/json": "ProfessionalError"
+          -
+            statusCode: "500"
+            description: |-
+              This error response is returned when an unexpected server error occurs. The error message my differ depending on the situation.
+            responseModels:
+              "application/json": "ProfessionalError"

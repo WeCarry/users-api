@@ -1,0 +1,21 @@
+#set ($dollar = "$")
+#set ($dot = ".")
+#set ($item = "item")
+#set ($id = $input.params("id"))
+#set ($select = $input.json("$.select"))
+{
+	#if ($context.authorizer.session != $undefined)
+  "_session": $context.authorizer.session ,
+  #end
+  "item": {
+  	"id": "$util.escapeJavaScript($id).replaceAll("\\'","'")"
+  #foreach($key in $input.path('$.item').keySet())
+    #if ($key != "id")
+      , "$key": $input.json("$dollar$dot$item$dot$key")
+    #end
+  #end
+  }
+  #if ($select != $undefined)
+  , "select": $select
+  #end
+}

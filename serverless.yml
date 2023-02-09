@@ -1,0 +1,259 @@
+service: professionals-api
+# app and org for use with dashboard.serverless.com
+#app: your-app-name
+org: praoshealth
+# You can pin your service to only deploy with a specific Serverless version
+# Check out our docs for more details
+# frameworkVersion: "=X.X.X"
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+
+  stage: ${opt:stage,'dev'}
+  region: us-west-2
+  timeout: 30
+  memorySize: 512 # optional, in MB, default is 1024
+  versionFunctions: false
+  
+  apiGateway:
+    restApiId:
+      'Fn::ImportValue': ${opt:stage,'dev'}-ApiGatewayRestApiId
+    restApiRootResourceId:
+      'Fn::ImportValue': ${opt:stage,'dev'}-ApiGatewayRestApiRootResourceId
+
+  # Environment Variables
+  environment:
+    DATABASE_URI: ${self:custom.databaseUri.${self:provider.stage}}
+    DATABASE_NAME: ${self:custom.databaseName.${self:provider.stage}}
+    DATABASE_POOL_SIZE: ${self:custom.databasePoolSize.${self:provider.stage}}
+    AUTHORIZATION_TOKEN: ${self:custom.authorizationToken.${self:provider.stage}}
+    JWT_SECRET: ${self:custom.jwtSecret.${opt:stage,'dev'}}
+    PROFESSIONAL_WEBHOOK_TOPIC_ARN:
+        Fn::Join:
+          - ':'
+          - - 'arn:aws:sns'
+            - Ref: AWS::Region
+            - Ref: AWS::AccountId
+            - professional-webhook-${self:provider.stage}
+    UPDATE_ENTITY_ID_TOPIC_ARN:
+        Fn::Join:
+          - ':'
+          - - 'arn:aws:sns'
+            - Ref: AWS::Region
+            - Ref: AWS::AccountId
+            - entity-id-update-${self:provider.stage}
+
+  vpc: ${file(serverless-vpc.yml):${self:provider.stage}}
+
+# you can add statements to the Lambda function's IAM Role here
+  iam:
+    role:
+      statements:
+        - Effect: 'Allow'
+          Action:
+            - 's3:ListBucket'
+            - 's3:GetObject'
+            - 's3:PutObject'
+            - 's3:DeleteObject'
+            - SNS:Publish
+          Resource: '*'
+
+# you can add packaging information here
+package:
+  include:
+    - handler.ts
+    - libgcj.so.10
+    - pdftk
+    - fonts/Roboto-Italic.ttf
+    - fonts/Roboto-Medium.ttf
+    - fonts/Roboto-MediumItalic.ttf
+    - fonts/Roboto-Regular.ttf
+#    - include-me-dir/**
+  exclude:
+#    - node_modules/**/*
+#    - exclude-me-dir/**
+functions:
+  add: ${file(src/add/serverless.yml)}
+  add-external: ${file(src/add/serverless-external.yml)}
+  addBulk: ${file(src/add/serverless-bulk.yml)}
+  affiliations-add: ${file(src/affiliations-add/serverless.yml)}
+  affiliations-reject: ${file(src/affiliations-reject/serverless.yml)}
+  affiliations-update: ${file(src/affiliations-update/serverless.yml)}
+  affiliations-files-add: ${file(src/affiliations-files-add/serverless.yml)}
+  affiliations-files-update: ${file(src/affiliations-files-update/serverless.yml)}
+  affiliations-files-delete: ${file(src/affiliations-files-delete/serverless.yml)}
+  archive: ${file(src/archive/serverless.yml)}
+  briefcase-checklists-delete: ${file(src/briefcase-checklists-delete/serverless.yml)}
+  briefcase-checklists-get: ${file(src/briefcase-checklists-get/serverless.yml)}
+  briefcase-checklists-update: ${file(src/briefcase-checklists-update/serverless.yml)}
+  briefcase-consent-get: ${file(src/briefcase-consent-get/serverless.yml)}
+  briefcase-licenses-verify: ${file(src/briefcase-licenses-verify/serverless.yml)}
+  briefcase-share: ${file(src/briefcase-share/serverless.yml)}
+  candidate-invite: ${file(src/candidate-invite/serverless.yml)}
+  candidate-refer: ${file(src/candidate-refer/serverless.yml)}
+  contact-me: ${file(src/contact-me/serverless.yml)}
+  documents: ${file(src/documents/serverless.yml)}
+  exists: ${file(src/exists/serverless.yml)}
+  get: ${file(src/get/serverless.yml)}
+  list: ${file(src/list/serverless.yml)}
+  migrate: ${file(src/migrate/serverless.yml)}
+  reports: ${file(src/reports/serverless.yml)}
+  sms-unsubscribe: ${file(src/sms-unsubscribe/serverless.yml)}
+  statistics: ${file(src/statistics/serverless.yml)}
+  suspend: ${file(src/suspend/serverless.yml)}
+  sync: ${file(src/sync/serverless.yml)}
+  sync-bulk: ${file(src/sync/serverless-bulk.yml)}
+  sync-external: ${file(src/sync-external/serverless.yml)}
+  update: ${file(src/update/serverless.yml)}
+  uploaded: ${file(src/uploaded/serverless.yml)}
+  verify: ${file(src/verify/serverless.yml)}
+  webhook: ${file(src/webhook/serverless.yml)}
+
+plugins:
+  - serverless-plugin-common-excludes
+  - serverless-plugin-log-retention
+  - serverless-plugin-typescript
+  - serverless-reqvalidator-plugin
+  - serverless-aws-documentation
+  - serverless-offline
+custom:
+  stages:
+    - dev
+    - staging
+    - prod
+  databaseUri:
+    dev: mongodb://praoshealth:9756m0qafVnHhlsV@db-dev.internal.praoshealth.com:27017/praos-dev
+    staging: mongodb://praoshealth:WimyxdOfd38UxSaW@db-stage.internal.praoshealth.com:27019/praos-staging
+    prod: mongodb://SERVER:rVUWAz3ynn1PoTwD@mongo-prd-01.praoshealth.com:27017,mongo-prd-02.praoshealth.com:27017/SERVER-live?replicaSet=live
+  databaseName:
+    dev: praos-dev
+    staging: praos-staging
+    prod: SERVER-live
+  databasePoolSize:
+    dev: 10
+    staging: 10
+    prod: 10
+  authorizationToken:
+    dev: dFYqOpAuWz5TotOgvBAocrCcJj8gy9iLEgMaVMRj
+    staging: mVQiHqDvft7ddz39rtXk7zkLikQG1d9eLjNY05v8
+    prod: QrO556XdcJikcQOpcU7h3UtZeJgXK5cAoEpr8tIU
+  jwtSecret:
+    dev: dvKXcMy6XkGQDXdx2ZqK
+    staging: M9uc6YzGo45aGYGVDxc3
+    prod: MhD32k2LrLSPJU3waCkc
+  s3AccessKeyId:
+    dev: AKIAJA3GUHE42J54FPCQ
+    staging: AKIAJA3GUHE42J54FPCQ
+    prod: AKIAJA3GUHE42J54FPCQ
+  s3SecretAccessKey:
+    dev: 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
+    staging: xVQt3vZFpDLZ91nGnUENlbqnhzcxn6814nVwEN7J
+    prod: xVQt3vZFpDLZ91nGnUENlbqnhzcxn6814nVwEN7J
+  logRetentionInDays: 30
+  documentation:
+    api:
+      info:
+        version: v2.0.0
+        title: Professional API
+        description: Professional API.
+    models:
+      - name: ProfessionalError
+        contentType: application/json
+        schema: ${file(src/error.json)}
+      - name: ProfessionalUnauthorizedError
+        contentType: application/json
+        schema: ${file(src/unauthorized-error.json)}
+      - name: ProfessionalResponse
+        contentType: application/json
+        schema: ${file(src/get/response.json)}
+      - name: ProfessionalExistsResponse
+        contentType: application/json
+        schema: ${file(src/exists/response.json)}
+      - name: ProfessionalUpdateRequest
+        contentType: application/json
+        schema: ${file(src/update/request.json)}
+      - name: ProfessionalUpdateItemRequest
+        contentType: application/json
+        schema: ${file(src/update/request-item.json)}
+#      - name: ProfessionalUploadRequest
+#        contentType: application/json
+#        schema: ${file(src/upload/request.json)}
+#      - name: ProfessionalUploadResponse
+#        contentType: application/json
+#        schema: ${file(src/upload/response.json)}
+      - name: ProfessionalAddRequest
+        contentType: application/json
+        schema: ${file(src/add/request.json)}
+      - name: ProfessionalAddExternalRequest
+        contentType: application/json
+        schema: ${file(src/add/request-external.json)}
+      - name: ProfessionalVerifyRequest
+        contentType: application/json
+        schema: ${file(src/verify/request.json)}
+      - name: ProfessionalAddAffiliationRequest
+        contentType: application/json
+        schema: ${file(src/affiliations-add/request.json)}
+      - name: ProfessionalRejectAffiliationRequest
+        contentType: application/json
+        schema: ${file(src/affiliations-reject/request.json)}
+      - name: ProfessionalUpdateAffiliationRequest
+        contentType: application/json
+        schema: ${file(src/affiliations-update/request.json)}
+      - name: ProfessionalUpdateChecklistRequest
+        contentType: application/json
+        schema: ${file(src/briefcase-checklists-update/request.json)}
+      - name: ProfessionalAddAffiliationFileRequest
+        contentType: application/json
+        schema: ${file(src/affiliations-files-add/request.json)}
+      - name: ProfessionalUpdateAffiliationFileRequest
+        contentType: application/json
+        schema: ${file(src/affiliations-files-update/request.json)}
+      - name: ProfessionalChecklistResponse
+        contentType: application/json
+        schema: ${file(src/briefcase-checklists-get/response.json)}
+      - name: ProfessionalConsentResponse
+        contentType: application/json
+        schema: ${file(src/briefcase-consent-get/response.json)}
+      - name: ProfessionalLicenseVerifyRequest
+        contentType: application/json
+        schema: ${file(src/briefcase-licenses-verify/request.json)}
+      - name: ProfessionalSuspendRequest
+        contentType: application/json
+        schema: ${file(src/suspend/request.json)}
+      - name: ProfessionalStatisticsResponse
+        contentType: application/json
+        schema: ${file(src/statistics/response.json)}
+      - name: ProfessionalSyncRequest
+        contentType: application/json
+        schema: ${file(src/sync/request.json)}
+      - name: ProfessionalBulkSyncRequest
+        contentType: application/json
+        schema: ${file(src/sync/request-bulk.json)}
+      - name: ProfessionalSyncExternalRequest
+        contentType: application/json
+        schema: ${file(src/sync-external/request.json)}
+      - name: ProfessionalContactMeRequest
+        contentType: application/json
+        schema: ${file(src/contact-me/request.json)}
+      - name: CandidateAddRequest
+        contentType: application/json
+        schema: ${file(src/candidate-invite/request.json)}
+      - name: CandidateAddResponse
+        contentType: application/json
+        schema: ${file(src/candidate-invite/response.json)}
+      - name: CandidateReferRequest
+        contentType: application/json
+        schema: ${file(src/candidate-refer/request.json)}
+      - name: CandidateReferResponse
+        contentType: application/json
+        schema: ${file(src/candidate-refer/response.json)}
+resources:
+  Resources:
+    WebhookAsyncConfig:
+      Type: AWS::Lambda::EventInvokeConfig
+      Properties:
+        FunctionName:
+          Ref: WebhookLambdaFunction
+        MaximumRetryAttempts: 0
+        Qualifier: $LATEST

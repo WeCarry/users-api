@@ -1,0 +1,349 @@
+name: ${self:service}-update-${self:provider.stage}
+handler: src/update/handler.handler
+events:
+  - http:
+      path: professional/{id}
+      authorizer:
+        type: CUSTOM 
+        authorizerId:
+          Fn::ImportValue: ${opt:stage,'dev'}-AuthenticationService
+      method: put
+      integration: lambda
+      reqValidatorName:
+        Fn::ImportValue: ${opt:stage,'dev'}-ApiGatewayRestOnlyBody
+      cors: true
+      request: 
+        passThrough: NEVER
+        template:
+          application/json: ${file(src/update/request.vtl)}
+      response:
+        headers:
+          Content-Type: "'application/json'"
+        statusCodes:
+          200:
+            pattern: ''
+          400:
+            pattern: '^\[400\][\s\S]*'
+            template:
+              application/json: ${file(serverless-error-json.vtl)}
+              text/plain: $input.path("$.errorMessage").substring(5)
+          403:
+            pattern: '^\[403\][\s\S]*'
+            template:
+              application/json: ${file(serverless-error-json.vtl)}
+              text/plain: $input.path("$.errorMessage").substring(5)
+          500:
+            pattern: '^\[500\][\s\S]*'
+            template:
+              application/json: ${file(serverless-error-json.vtl)}
+              text/plain: $input.path("$.errorMessage").substring(5)
+      documentation:
+        pathParams:
+          - name: "id"
+            description: "The user ID."
+            required: true
+        description: |-
+          Adds an item to a briefcase field.
+
+          ### Security
+          - System Administrator
+          - API User
+          - Organization Admin/Co-Admin
+          - Department Manager
+          - Department User
+          - Professional
+          
+          ### Actions
+          - Updates a professional.
+          - Calls organization's update webhook (if exists).
+        requestModels:
+          application/json: ProfessionalUpdateRequest
+        methodResponses:
+          -
+            statusCode: "200"
+            description:
+            responseModels:
+              "application/json": "ProfessionalResponse"
+          -
+            statusCode: "400"
+            description: |-
+              | Type                    | Message                                                                                                           |
+              | :---------------------- | ----------------------------------------------------------------------------------------------------------------: |
+              |                         | Invalid request body                                                                                              |
+              | UserNotFoundError       | Session user not found.                                                                                           |
+            responseModels:
+              "application/json": "ProfessionalError"
+          -
+            statusCode: "403"
+            description: |-
+              This error response is returned when the session user does not have access to the requested resource.
+            responseModels:
+              "application/json": "ProfessionalUnauthorizedError"
+          -
+            statusCode: "500"
+            description: |-
+              This error response is returned when an unexpected server error occurs. The error message my differ depending on the situation.
+            responseModels:
+              "application/json": "ProfessionalError"
+  - http:
+      path: professional/{id}/briefcase/{field}
+      authorizer:
+        type: CUSTOM 
+        authorizerId:
+          Fn::ImportValue: ${opt:stage,'dev'}-AuthenticationService
+      method: post
+      integration: lambda
+      reqValidatorName:
+        Fn::ImportValue: ${opt:stage,'dev'}-ApiGatewayRestOnlyBody
+      cors: true
+      request: 
+        passThrough: NEVER
+        template:
+          application/json: ${file(src/update/request-item.vtl)}
+      response:
+        headers:
+          Content-Type: "'application/json'"
+        statusCodes:
+          200:
+            pattern: ''
+          400:
+            pattern: '^\[400\][\s\S]*'
+            template:
+              application/json: ${file(serverless-error-json.vtl)}
+              text/plain: $input.path("$.errorMessage").substring(5)
+          403:
+            pattern: '^\[403\][\s\S]*'
+            template:
+              application/json: ${file(serverless-error-json.vtl)}
+              text/plain: $input.path("$.errorMessage").substring(5)
+          500:
+            pattern: '^\[500\][\s\S]*'
+            template:
+              application/json: ${file(serverless-error-json.vtl)}
+              text/plain: $input.path("$.errorMessage").substring(5)
+      documentation:
+        pathParams:
+          - name: "id"
+            description: "The user ID."
+            required: true
+          - name: "field"
+            description: "The briefcase field to add an item to."
+            required: true
+        description: |-
+          Adds an item to a briefcase field.
+
+          ### Security
+          - API User
+          - Organization Admin/Co-Admin
+          - Department Manager
+          - Department User
+          - Professional
+          
+          ### Actions
+          - Updates a professional.
+          - Calls organization's update webhook (if exists).
+        requestModels:
+          application/json: ProfessionalUpdateItemRequest
+        methodResponses:
+          -
+            statusCode: "200"
+            description:
+            responseModels:
+              "application/json": "ProfessionalResponse"
+          -
+            statusCode: "400"
+            description: |-
+              | Type                    | Message                                                                                                           |
+              | :---------------------- | ----------------------------------------------------------------------------------------------------------------: |
+              |                         | Invalid request body                                                                                              |
+              | UserNotFoundError       | Session user not found.                                                                                           |
+            responseModels:
+              "application/json": "ProfessionalError"
+          -
+            statusCode: "403"
+            description: |-
+              This error response is returned when the session user does not have access to the requested resource.
+            responseModels:
+              "application/json": "ProfessionalUnauthorizedError"
+          -
+            statusCode: "500"
+            description: |-
+              This error response is returned when an unexpected server error occurs. The error message my differ depending on the situation.
+            responseModels:
+              "application/json": "ProfessionalError"
+  - http:
+      path: professional/{id}/briefcase/{field}/{itemId}
+      authorizer:
+        type: CUSTOM 
+        authorizerId:
+          Fn::ImportValue: ${opt:stage,'dev'}-AuthenticationService
+      method: put
+      integration: lambda
+      reqValidatorName:
+        Fn::ImportValue: ${opt:stage,'dev'}-ApiGatewayRestOnlyBody
+      cors: true
+      request: 
+        passThrough: NEVER
+        template:
+          application/json: ${file(src/update/request-item.vtl)}
+      response:
+        headers:
+          Content-Type: "'application/json'"
+        statusCodes:
+          200:
+            pattern: ''
+          400:
+            pattern: '^\[400\][\s\S]*'
+            template:
+              application/json: ${file(serverless-error-json.vtl)}
+              text/plain: $input.path("$.errorMessage").substring(5)
+          403:
+            pattern: '^\[403\][\s\S]*'
+            template:
+              application/json: ${file(serverless-error-json.vtl)}
+              text/plain: $input.path("$.errorMessage").substring(5)
+          500:
+            pattern: '^\[500\][\s\S]*'
+            template:
+              application/json: ${file(serverless-error-json.vtl)}
+              text/plain: $input.path("$.errorMessage").substring(5)
+      documentation:
+        pathParams:
+          - name: "id"
+            description: "The user ID."
+            required: true
+          - name: "field"
+            description: "The briefcase field to update."
+            required: true
+          - name: "itemId"
+            description: "The ID of the briefcase item."
+            required: true
+        description: |-
+          Updates an item of a briefcase field.
+
+          ### Security
+          - API User
+          - Organization Admin/Co-Admin
+          - Department Manager
+          - Department User
+          - Professional
+          
+          ### Actions
+          - Updates a professional.
+          - Calls organization's update webhook (if exists).
+        requestModels:
+          application/json: ProfessionalUpdateItemRequest
+        methodResponses:
+          -
+            statusCode: "200"
+            description:
+            responseModels:
+              "application/json": "ProfessionalResponse"
+          -
+            statusCode: "400"
+            description: |-
+              | Type                    | Message                                                                                                           |
+              | :---------------------- | ----------------------------------------------------------------------------------------------------------------: |
+              |                         | Invalid request body                                                                                              |
+              | UserNotFoundError       | Session user not found.                                                                                           |
+            responseModels:
+              "application/json": "ProfessionalError"
+          -
+            statusCode: "403"
+            description: |-
+              This error response is returned when the session user does not have access to the requested resource.
+            responseModels:
+              "application/json": "ProfessionalUnauthorizedError"
+          -
+            statusCode: "500"
+            description: |-
+              This error response is returned when an unexpected server error occurs. The error message my differ depending on the situation.
+            responseModels:
+              "application/json": "ProfessionalError"
+  - http:
+      path: professional/{id}/briefcase/{field}/{itemId}
+      authorizer:
+        type: CUSTOM 
+        authorizerId:
+          Fn::ImportValue: ${opt:stage,'dev'}-AuthenticationService
+      method: delete
+      integration: lambda
+      reqValidatorName:
+        Fn::ImportValue: ${opt:stage,'dev'}-ApiGatewayRestOnlyBody
+      cors: true
+      request: 
+        passThrough: NEVER
+        template:
+          application/json: ${file(src/update/request-item.vtl)}
+      response:
+        headers:
+          Content-Type: "'application/json'"
+        statusCodes:
+          200:
+            pattern: ''
+          400:
+            pattern: '^\[400\][\s\S]*'
+            template:
+              application/json: ${file(serverless-error-json.vtl)}
+              text/plain: $input.path("$.errorMessage").substring(5)
+          403:
+            pattern: '^\[403\][\s\S]*'
+            template:
+              application/json: ${file(serverless-error-json.vtl)}
+              text/plain: $input.path("$.errorMessage").substring(5)
+          500:
+            pattern: '^\[500\][\s\S]*'
+            template:
+              application/json: ${file(serverless-error-json.vtl)}
+              text/plain: $input.path("$.errorMessage").substring(5)
+      documentation:
+        pathParams:
+          - name: "id"
+            description: "The user ID."
+            required: true
+          - name: "field"
+            description: "The briefcase field to update."
+            required: true
+          - name: "itemId"
+            description: "The ID of the briefcase item."
+            required: true
+        description: |-
+          Deletes an item of a briefcase field.
+
+          ### Security
+          - API User
+          - Organization Admin/Co-Admin
+          - Department Manager
+          - Department User
+          - Professional
+          
+          ### Actions
+          - Updates a professional.
+          - Calls organization's update webhook (if exists).
+        methodResponses:
+          -
+            statusCode: "200"
+            description:
+            responseModels:
+              "application/json": "ProfessionalResponse"
+          -
+            statusCode: "400"
+            description: |-
+              | Type                    | Message                                                                                                           |
+              | :---------------------- | ----------------------------------------------------------------------------------------------------------------: |
+              |                         | Invalid request body                                                                                              |
+              | UserNotFoundError       | Session user not found.                                                                                           |
+            responseModels:
+              "application/json": "ProfessionalError"
+          -
+            statusCode: "403"
+            description: |-
+              This error response is returned when the session user does not have access to the requested resource.
+            responseModels:
+              "application/json": "ProfessionalUnauthorizedError"
+          -
+            statusCode: "500"
+            description: |-
+              This error response is returned when an unexpected server error occurs. The error message my differ depending on the situation.
+            responseModels:
+              "application/json": "ProfessionalError"

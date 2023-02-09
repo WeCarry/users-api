@@ -1,0 +1,13 @@
+#set ($dollar = "$")
+#set ($dot = ".")
+{
+	"dummy": 123
+	#if ($context.authorizer.session != $undefined)
+  , "_session": $context.authorizer.session
+  #end
+  #foreach($key in $input.params().querystring.keySet())
+    #if ($key != "_session")
+      , "$key": "$util.escapeJavaScript($input.params().querystring.get($key)).replaceAll("\\'","'")"
+    #end
+  #end
+}

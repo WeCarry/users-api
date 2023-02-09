@@ -1,0 +1,399 @@
+{
+	"$schema": "http://json-schema.org/draft-04/schema#",
+	"oneOf": [
+		{
+			"type": "object",
+			"description": "Activity Work",
+			"properties": {
+				"_field": {
+					"enum": ["activitywork"]
+				},
+				"id": {
+					"description": "The ID of the item being updated.",
+					"type": "string"
+				},
+				"title": {
+					"type": "string",
+					"minLength": 1
+				},
+				"startDate": {
+					"type": "integer"
+				},
+				"endDate": {
+					"type": "integer"
+				},
+				"projectDetailsUrl": {
+					"type": "string",
+					"minLength": 1
+				}
+			},
+			"required": ["_field"],
+			"additionalProperties": false
+		},
+		{
+			"type": "object",
+			"description": "Additional Certifications",
+			"properties": {
+				"_field": {
+					"enum": ["additionalcertifications"]
+				},
+				"id": {
+					"description": "The ID of the item being updated.",
+					"type": "string"
+				},
+				"name": {
+					"type": "string",
+					"minLength": 1
+				},
+				"label": {
+					"type": "string",
+					"minLength": 1
+				},
+				"expirationDate": {
+					"type": "integer"
+				},
+				"eCardNumber": {
+					"type": "string",
+					"minLength": 1
+				}
+			},
+			"required": ["_field", "name"],
+			"additionalProperties": false
+		},
+		{
+			"type": "object",
+			"description": "Additional Documents",
+			"properties": {
+				"_field": {
+					"enum": ["additionaldocuments"]
+				},
+				"id": {
+					"description": "The ID of the item being updated.",
+					"type": "string"
+				},
+				"name": {
+					"description": "The name of the additional document",
+					"type": "string",
+					"minLength": 1
+				}
+			},
+			"required": ["_field", "id"],
+			"additionalProperties": false
+		},
+		{
+			"type": "object",
+			"description": "Certifications",
+			"properties": {
+				"_field": {
+					"enum": ["certifications"]
+				},
+				"id": {
+					"description": "The ID of the item being updated.",
+					"type": "string",
+					"minLength": 1
+				},
+				"name": {
+					"type": "string",
+					"minLength": 1
+				},
+				"certifyingBody": {
+					"type": "string",
+					"minLength": 1
+				},
+				"expirationDate": {
+					"type": "integer"
+				},
+				"digitalBadgeUrl": {
+					"type": "string",
+					"minLength": 1
+				}
+			},
+			"required": ["_field", "name", "certifyingBody"],
+			"additionalProperties": false
+		},
+		{
+			"type": "object",
+			"description": "Competencies",
+			"properties": {
+				"_field": {
+					"enum": ["competencies"]
+				},
+				"id": {
+					"description": "The ID of the item being updated.",
+					"type": "string"
+				},
+				"title": {
+					"type": "string",
+					"minLength": 1
+				},
+				"startDate": {
+					"type": "integer"
+				},
+				"endDate": {
+					"type": "integer"
+				},
+				"moduleContentUrl": {
+					"type": "string",
+					"minLength": 1
+				}
+			},
+			"required": ["_field"],
+			"additionalProperties": false
+		},
+		{
+			"type": "object",
+			"description": "Continuing Education",
+			"properties": {
+				"_field": {
+					"enum": ["continuingeducation"]
+				},
+				"id": {
+					"description": "The ID of the item being updated.",
+					"type": "string"
+				},
+				"title": {
+					"type": "string",
+					"minLength": 1
+				},
+				"startDate": {
+					"type": "integer"
+				},
+				"endDate": {
+					"type": "integer"
+				},
+				"isInternal": {
+					"type": "boolean"
+				},
+				"courseWorkUrl": {
+					"type": "string",
+					"minLength": 1
+				}
+			},
+			"required": ["_field", "title"],
+			"additionalProperties": false
+		},
+		{
+			"type": "object",
+			"description": "Education",
+			"properties": {
+				"_field": {
+					"enum": ["education"]
+				},
+				"id": {
+					"description": "The ID of the item being updated.",
+					"type": "string"
+				},
+				"institute": {
+					"type": "string",
+					"minLength": 1
+				},
+				"yearFrom": {
+					"type": "integer",
+					"minimum": 1
+				},
+				"yearTo": {
+					"type": "integer",
+					"minimum": 1
+				},
+				"programName": {
+					"type": "string",
+					"minLength": 1
+				},
+				"courseWorkUrl": {
+					"type": "string",
+					"minLength": 1
+				},
+				"status": {
+					"type": "string",
+					"minLength": 1
+				}
+			},
+			"required": ["_field"],
+			"additionalProperties": false
+		},
+		{
+			"type": "object",
+			"description": "Education Documents",
+			"properties": {
+				"_field": {
+					"enum": ["educationdocuments"]
+				},
+				"id": {
+					"description": "The ID of the item being updated.",
+					"type": "string"
+				},
+				"name": {
+					"type": "string",
+					"minLength": 1
+				}
+			},
+			"required": ["_field", "id"],
+			"additionalProperties": false
+		},
+		{
+			"type": "object",
+			"description": "Facilities",
+			"properties": {
+				"_field": {
+					"enum": ["facilities"]
+				},
+				"id": {
+					"description": "The ID of the item being updated.",
+					"type": "string"
+				},
+				"name": {
+					"type": "string",
+					"minLength": 1
+				},
+				"city": {
+					"type": "string",
+					"minLength": 1
+				},
+				"state": {
+					"type": "string",
+					"minLength": 1
+				}
+			},
+			"required": ["_field"],
+			"additionalProperties": false
+		},
+		{
+			"type": "object",
+			"description": "Health Documents",
+			"properties": {
+				"_field": {
+					"enum": ["healthdocuments"]
+				},
+				"id": {
+					"description": "The ID of the item being updated.",
+					"type": "string"
+				},
+				"name": {
+					"type": "string",
+					"minLength": 1
+				},
+				"reason": {
+					"type": "string",
+					"minLength": 1
+				},
+				"date": {
+					"type": "integer"
+				}
+			},
+			"required": ["_field", "id", "name"],
+			"additionalProperties": false
+		},
+		{
+			"type": "object",
+			"description": "Licenses",
+			"properties": {
+				"_field": {
+					"enum": ["licenses"]
+				},
+				"id": {
+					"description": "The ID of the item being updated.",
+					"type": "string",
+					"minLength": 1
+				},
+				"licenseType": {
+					"type": "string",
+					"minLength": 1
+				},
+				"licenseBody": {
+					"type": "string",
+					"minLength": 1
+				},
+				"issueDate": {
+					"type": ["number", "null"]
+				},
+				"expirationDate": {
+					"type": "integer"
+				},
+				"licenseNumber": {
+					"type": "string",
+					"minLength": 1
+				},
+				"isCompact": {
+					"type": "boolean"
+				},
+				"dateOfBirth": {
+					"type": "integer"
+				},
+				"ssn": {
+					"type": "string",
+					"minLength": 4,
+					"maxLength": 4
+				},
+				"manualOverride": {
+					"type": "boolean"
+				}
+			},
+			"required": ["_field", "licenseType", "licenseBody", "expirationDate", "licenseNumber", "isCompact"],
+			"additionalProperties": false
+		},
+		{
+			"type": "object",
+			"description": "Organization Membership",
+			"properties": {
+				"_field": {
+					"enum": ["organizationmembership"]
+				},
+				"id": {
+					"description": "The ID of the item being updated.",
+					"type": "string"
+				},
+				"name": {
+					"type": "string",
+					"minLength": 1
+				},
+				"startDate": {
+					"type": "integer"
+				},
+				"endDate": {
+					"type": "integer"
+				}
+			},
+			"required": ["_field", "name"],
+			"additionalProperties": false
+		},
+		{
+			"type": "object",
+			"description": "References",
+			"properties": {
+				"_field": {
+					"enum": ["references"]
+				},
+				"id": {
+					"description": "The ID of the item being updated.",
+					"type": "string"
+				},
+				"title": {
+					"type": "string",
+					"minLength": 1
+				},
+				"organization": {
+					"type": "string",
+					"minLength": 1
+				},
+				"firstName": {
+					"type": "string",
+					"minLength": 1
+				},
+				"lastName": {
+					"type": "string",
+					"minLength": 1
+				},
+				"phoneNumber": {
+					"type": "string",
+					"minLength": 1
+				},
+				"email": {
+					"type": "string",
+					"minLength": 1
+				}
+			},
+			"required": ["_field"],
+			"additionalProperties": false
+		}
+	]
+}

@@ -1,0 +1,137 @@
+name: ${self:service}-get-${self:provider.stage}
+handler: src/get/handler.handler
+events:
+  - http:
+      path: professional/{id}
+      method: get
+      integration: lambda
+      reqValidatorName:
+        Fn::ImportValue: ${opt:stage,'dev'}-ApiGatewayRestOnlyBody
+      cors: true
+      request: 
+        passThrough: NEVER
+        template:
+          application/json: ${file(src/get/request.vtl)}
+      response:
+        headers:
+          Content-Type: "'application/json'"
+        statusCodes:
+          200:
+            pattern: ''
+          400:
+            pattern: '^\[400\][\s\S]*'
+            template:
+              application/json: ${file(serverless-error-json.vtl)}
+              text/plain: $input.path("$.errorMessage").substring(5)
+          403:
+            pattern: '^\[403\][\s\S]*'
+            template:
+              application/json: ${file(serverless-error-json.vtl)}
+              text/plain: $input.path("$.errorMessage").substring(5)
+          500:
+            pattern: '^\[500\][\s\S]*'
+            template:
+              application/json: ${file(serverless-error-json.vtl)}
+              text/plain: $input.path("$.errorMessage").substring(5)
+      documentation:
+        description: |-
+          Returns the requested professional.
+        pathParams:
+          - name: "id"
+            description: "The user ID."
+            required: true
+        queryParams: 
+          - name: "select"
+            description: |-
+              The select statement (URI encoded). Any combination of fields may be specified.
+              {
+              &nbsp;&nbsp;&nbsp;&nbsp;"firstName": 1,
+              &nbsp;&nbsp;&nbsp;&nbsp;"lastName": 1,
+              &nbsp;&nbsp;&nbsp;&nbsp;"address": 1,
+              &nbsp;&nbsp;&nbsp;&nbsp;"dateOfBirth": 1,
+              &nbsp;&nbsp;&nbsp;&nbsp;"deactivatedAt": 1,
+              &nbsp;&nbsp;&nbsp;&nbsp;"email": 1,
+              &nbsp;&nbsp;&nbsp;&nbsp;"facebookId": 1,
+              &nbsp;&nbsp;&nbsp;&nbsp;"linkedInId": 1,
+              &nbsp;&nbsp;&nbsp;&nbsp;"gender": 1,
+              &nbsp;&nbsp;&nbsp;&nbsp;"emailCommunicationEnabled": 1,
+              &nbsp;&nbsp;&nbsp;&nbsp;"phoneNumber": 1,
+              &nbsp;&nbsp;&nbsp;&nbsp;"ssn": 1,
+              &nbsp;&nbsp;&nbsp;&nbsp;"timezone": 1,
+              &nbsp;&nbsp;&nbsp;&nbsp;"profession": 1,
+              &nbsp;&nbsp;&nbsp;&nbsp;"profilePicUrl": 1,
+              &nbsp;&nbsp;&nbsp;&nbsp;"profilePicThumbUrl": 1,
+              &nbsp;&nbsp;&nbsp;&nbsp;"languages": 1,
+              &nbsp;&nbsp;&nbsp;&nbsp;"briefcase.activityWork": 1,
+              &nbsp;&nbsp;&nbsp;&nbsp;"briefcase.additionalCertifications": 1,
+              &nbsp;&nbsp;&nbsp;&nbsp;"briefcase.additionalCertificationHistory": 1,
+              &nbsp;&nbsp;&nbsp;&nbsp;"briefcase.additionalDocuments": 1,
+              &nbsp;&nbsp;&nbsp;&nbsp;"briefcase.certifications": 1,
+              &nbsp;&nbsp;&nbsp;&nbsp;"briefcase.certificationHistory": 1,
+              &nbsp;&nbsp;&nbsp;&nbsp;"briefcase.completedAt": 1,
+              &nbsp;&nbsp;&nbsp;&nbsp;"briefcase.competencies": 1,
+              &nbsp;&nbsp;&nbsp;&nbsp;"briefcase.continuingEducation": 1,
+              &nbsp;&nbsp;&nbsp;&nbsp;"briefcase.currentStep": 1,
+              &nbsp;&nbsp;&nbsp;&nbsp;"briefcase.driversLicense": 1,
+              &nbsp;&nbsp;&nbsp;&nbsp;"briefcase.education": 1,
+              &nbsp;&nbsp;&nbsp;&nbsp;"briefcase.educationDocuments": 1,
+              &nbsp;&nbsp;&nbsp;&nbsp;"briefcase.educationLevel": 1,
+              &nbsp;&nbsp;&nbsp;&nbsp;"briefcase.ehrSkills": 1,
+              &nbsp;&nbsp;&nbsp;&nbsp;"briefcase.facilities": 1,
+              &nbsp;&nbsp;&nbsp;&nbsp;"briefcase.healthDocuments": 1,
+              &nbsp;&nbsp;&nbsp;&nbsp;"briefcase.liabilityInsurance": 1,
+              &nbsp;&nbsp;&nbsp;&nbsp;"briefcase.licensedAt": 1,
+              &nbsp;&nbsp;&nbsp;&nbsp;"briefcase.licenses": 1,
+              &nbsp;&nbsp;&nbsp;&nbsp;"briefcase.licenseHistory": 1,
+              &nbsp;&nbsp;&nbsp;&nbsp;"briefcase.organizationMembership": 1,
+              &nbsp;&nbsp;&nbsp;&nbsp;"briefcase.personalStatement": 1,
+              &nbsp;&nbsp;&nbsp;&nbsp;"briefcase.references": 1,
+              &nbsp;&nbsp;&nbsp;&nbsp;"briefcase.specialties": 1,
+              &nbsp;&nbsp;&nbsp;&nbsp;"briefcase.vehicleInsurance": 1,
+              &nbsp;&nbsp;&nbsp;&nbsp;"briefcase.w9": 1,
+              &nbsp;&nbsp;&nbsp;&nbsp;"briefcase.workExperience": 1,
+              &nbsp;&nbsp;&nbsp;&nbsp;"briefcase.yearsOfExperience": 1,
+              &nbsp;&nbsp;&nbsp;&nbsp;"emergencyContact": 1,
+              &nbsp;&nbsp;&nbsp;&nbsp;"jobs.cancelledJobs": 1,
+              &nbsp;&nbsp;&nbsp;&nbsp;"jobs.confirmedJobs": 1,
+              &nbsp;&nbsp;&nbsp;&nbsp;"jobs.consentedAt": 1,
+              &nbsp;&nbsp;&nbsp;&nbsp;"jobs.newJobEmail": 1,
+              &nbsp;&nbsp;&nbsp;&nbsp;"jobs.newJobSms": 1,
+              &nbsp;&nbsp;&nbsp;&nbsp;"jobs.workCities": 1,
+              &nbsp;&nbsp;&nbsp;&nbsp;"jobs.workStates": 1,
+              &nbsp;&nbsp;&nbsp;&nbsp;"jobs.workDistance": 1,
+              &nbsp;&nbsp;&nbsp;&nbsp;"jobs.workDistance": 1,
+              &nbsp;&nbsp;&nbsp;&nbsp;"jobs.availiableDate": 1,
+              &nbsp;&nbsp;&nbsp;&nbsp;"jobs.requestedTimeoff": 1,
+              &nbsp;&nbsp;&nbsp;&nbsp;"jobs.preferredShift": 1,
+              &nbsp;&nbsp;&nbsp;&nbsp;"jobs.preferredSchedule": 1
+              }
+          - name: "token"
+            description: "A briefcase share token."
+        methodResponses:
+          -
+            statusCode: "200"
+            description:
+            responseModels:
+              "application/json": "ProfessionalResponse"
+          -
+            statusCode: "400"
+            description: |-
+              | Type              | Message              |
+              | :---------------- | -------------------: |
+              |                   | Invalid request body |
+              | UserNotFoundError | User not found.      |
+            responseModels:
+              "application/json": "ProfessionalError"
+          -
+            statusCode: "403"
+            description: |-
+              This error response is returned when the session user does not have access to the requested resource.
+            responseModels:
+              "application/json": "ProfessionalUnauthorizedError"
+          -
+            statusCode: "500"
+            description: |-
+              This error response is returned when an unexpected server error occurs. The error message my differ depending on the situation.
+            responseModels:
+              "application/json": "ProfessionalError"

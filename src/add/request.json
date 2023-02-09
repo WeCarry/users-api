@@ -1,0 +1,784 @@
+{
+	"$schema": "http://json-schema.org/draft-04/schema#",
+	"properties": {
+		"item": {
+			"type": "object",
+			"properties": {
+				"profession": {
+					"description": "The user's profession.",
+					"enum": ["Nurse", "Allied Health"],
+					"type": "string",
+					"minLength": 1
+				},
+				"firstName": {
+					"description": "The user's first name.",
+					"type": "string",
+					"minLength": 1
+				},
+				"lastName": {
+					"description": "The user's first name.",
+					"type": "string",
+					"minLength": 1
+				},
+				"dateOfBirth": {
+					"description": "The user's date of birth.",
+					"type": "integer"
+				},
+				"gender": {
+					"description": "The user's gender.",
+					"type": ["string", "null"],
+					"enum": ["Male", "Female", "Other"]
+				},
+				"email": {
+					"description": "The user's email address. This is also the username of the user.",
+					"type": "string",
+					"minLength": 1
+				},
+				"emailCommunicationEnabled": {
+					"description": "Whether email communication is enabled for this user.",
+					"type": "boolean"
+				},
+				"signupChannel": {
+					"description": "The channel the user is signing up from. Default: WEB",
+					"enum": ["IOS", "ANDROID", "WEB"]
+				},
+				"linkedInId": {
+					"description": "The user's linkedIn ID.",
+					"type": "string"
+				},
+				"facebookId": {
+					"description": "The user's facebook ID.",
+					"type": "string"
+				},
+				"phoneNumber": {
+					"description": "The user's phone number.",
+					"type": ["string", "null"],
+					"pattern": "^[0-9]*$"
+				},
+				"address": {
+					"description": "The user's home address.",
+					"type": "object",
+					"properties": {
+						"address1": {
+							"description": "Line 1 of the address.",
+							"type": "string",
+							"minLength": 1
+						},
+						"address2": {
+							"description": "Line 2 of the address.",
+							"type": ["string", "null"]
+						},
+						"city": {
+							"description": "The address city.",
+							"type": "string",
+							"minLength": 1
+						},
+						"state": {
+							"description": "The address state.",
+							"type": "string",
+							"minLength": 1
+						},
+						"zip": {
+							"description": "The address zip.",
+							"type": "string",
+							"minLength": 1,
+							"pattern": "^[0-9]*$"
+						},
+						"country": {
+							"description": "The address country. (Defaults to US)",
+							"type": "string",
+							"minLength": 1
+						},
+						"coordinates": {
+							"description": "The longitude/latitude of the city.",
+							"type": "array",
+							"items": {
+								"type": "number",
+								"minimum": -180,
+								"maximum": 180
+							},
+							"minItems": 2,
+							"maxItems": 2
+						}
+					},
+					"required": ["address1", "city", "state", "zip"],
+					"additionalProperties": false
+				},
+				"ssn": {
+					"description": "The last 4 digits of the user's SSN.",
+					"type": ["string", "null"],
+					"minLength": 4,
+					"maxLength": 4
+				},
+				"languages": {
+					"description": "A list of languages that the user is fluent in.",
+					"type": ["array", "null"],
+					"items": {
+						"type": "string",
+						"minLength": 1
+					}
+				},
+				"emergencyContact": {
+					"description": "The user's emergency contact.",
+					"type": ["object", "null"],
+					"properties": {
+						"name": {
+							"description": "The name of the emergency contact.",
+							"type": ["string", "null"]
+						},
+						"relationship": {
+							"description": "The relationship of the emergency contact to the user.",
+							"type": ["string", "null"]
+						},
+						"email": {
+							"description": "The email of the emergency contact.",
+							"type": ["string", "null"]
+						},
+						"phoneNumber": {
+							"description": "The emergency contact's phone number.",
+							"type": ["string", "null"]
+						}
+					},
+					"additionalProperties": false
+				},
+				"jobs": {
+					"properties": {
+						"workCities": {
+							"description": "The list of work cities.",
+							"type": ["array", "null"],
+							"items": {
+								"type": "object",
+								"properties": {
+									"city": {
+										"description": "The name of the city.",
+										"type": "string",
+										"minLength": 1
+									},
+									"state": {
+										"description": "The state the city resides in.",
+										"type": "string",
+										"minLength": 1
+									},
+									"country": {
+										"description": "The address country. (Defaults to US)",
+										"type": "string",
+										"minLength": 1
+									},
+									"coordinates": {
+										"description": "The longitude/latitude of the city.",
+										"type": "array",
+										"items": {
+											"type": "number",
+											"minimum": -180,
+											"maximum": 180
+										},
+										"minItems": 2,
+										"maxItems": 2
+									}
+								},
+								"required": ["city", "state", "coordinates"],
+								"additionalProperties": false
+							}
+						},
+						"workStates": {
+							"description": "The list of work states.",
+							"type": ["array", "null"],
+							"items": {
+								"type": "string",
+								"minLength": 1
+							}
+						},
+						"workDistance": {
+							"description": "The distance (in miles) from the work cities to match the user to jobs.",
+							"type": "integer",
+							"minimum": 0
+						},
+						"newJobEmail": {
+							"description": "The user's email preference when a new job is posted.\r\n0 - No Email\r\n1 - Daily\r\n2 - Realtime\r\n3 - Weekly",
+							"type": "integer",
+							"minimum": 0,
+							"maximum": 3
+						},
+						"newJobSms": {
+							"description": "The user's SMS preference when a new job is posted.",
+							"type": "boolean"
+						},
+						"availiableDate": {
+							"description": "The date in which the professional is available.",
+							"type": "integer"
+						},
+						"requestedTimeoff": {
+							"description": "A list of dates the professional wants off.",
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"fromDate": {
+										"description": "The from date that the professional requested off.",
+										"type": "integer"
+									},
+									"toDate": {
+										"description": "The to date that the professional requested off.",
+										"type": "integer"
+									}
+								}
+							}
+						},
+						"preferredShift": {
+							"description": "Whether the professional preferrs to work days or nigths.",
+							"type": "string",
+							"enum": ["Nights", "Days"]
+						},
+						"preferredSchedule": {
+							"description": "The professionals preferred days to work (1 = Sunday, 2 = Monday, 3 = Tuesday, 4 = Wednesday, 5 = Thursday, 6 = Friday, 6 = Saturday)",
+							"type": "integer",
+							"minimum": 0,
+							"maximum": 127
+						}
+					},
+					"additionalProperties": false
+				},
+				"briefcase": {
+					"type": "object",
+					"properties": {
+						"activityWork": {
+							"type": ["array", "null"],
+							"items": {
+								"type": "object",
+								"properties": {
+									"id": {
+										"type": "string"
+									},
+									"title": {
+										"type": "string",
+										"minLength": 1
+									},
+									"startDate": {
+										"type": "integer"
+									},
+									"endDate": {
+										"type": "integer"
+									},
+									"projectDetailsUrl": {
+										"type": "string",
+										"minLength": 1
+									}
+								},
+								"additionalProperties": false
+							}
+						},
+						"additionalCertifications": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"id": {
+										"description": "The unique identifier of the additional certification. (i.e. 1, 2, 3)",
+										"type": "string"
+									},
+									"name": {
+										"description": "The name of the additional certification. (CPR, BLS, ALS/ACLS, PALS, TNCC, STABLE, Others (string))",
+										"type": "string",
+										"minLength": 1
+									},
+									"expirationDate": {
+										"type": "integer"
+									},
+									"eCardNumber": {
+										"type": "string",
+										"minLength": 1
+									}
+								},
+								"required": ["name"],
+								"additionalProperties": false
+							},
+							"minItems": 1
+						},
+						"additionalDocuments": {
+							"type": ["array", "null"],
+							"items": {
+								"type": "object",
+								"properties": {
+									"id": {
+										"type": "string"
+									},
+									"name": {
+										"type": "string",
+										"minLength": 1
+									}
+								},
+								"required": ["id"],
+								"additionalProperties": false
+							}
+						},
+						"certifications": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"id": {
+										"type": "string",
+										"minLength": 1
+									},
+									"name": {
+										"type": "string",
+										"minLength": 1
+									},
+									"certifyingBody": {
+										"type": "string",
+										"minLength": 1
+									},
+									"expirationDate": {
+										"type": "integer"
+									},
+									"digitalBadgeUrl": {
+										"type": "string",
+										"minLength": 1
+									}
+								},
+								"required": ["name", "certifyingBody"],
+								"additionalProperties": false
+							}
+						},
+						"competencies": {
+							"type": ["array", "null"],
+							"items": {
+								"type": "object",
+								"properties": {
+									"id": {
+										"type": "string"
+									},
+									"title": {
+										"type": "string",
+										"minLength": 1
+									},
+									"startDate": {
+										"type": "integer"
+									},
+									"endDate": {
+										"type": "integer"
+									},
+									"moduleContentUrl": {
+										"type": "string",
+										"minLength": 1
+									}
+								},
+								"additionalProperties": false
+							}
+						},
+						"continuingEducation": {
+							"type": ["array", "null"],
+							"items": {
+								"type": "object",
+								"properties": {
+									"id": {
+										"type": "string"
+									},
+									"title": {
+										"type": "string",
+										"minLength": 1
+									},
+									"startDate": {
+										"type": "integer"
+									},
+									"endDate": {
+										"type": "integer"
+									},
+									"isInternal": {
+										"type": "boolean"
+									},
+									"courseWorkUrl": {
+										"type": "string",
+										"minLength": 1
+									}
+								},
+								"required": ["title"],
+								"additionalProperties": false
+							}
+						},
+						"currentStep": {
+							"type": "integer",
+							"minimum": 0
+						},
+						"driversLicense": {
+							"type": ["object", "null"],
+							"properties": {
+								"state": {
+									"type": "string",
+									"minLength": 1
+								},
+								"number": {
+									"type": "string",
+									"minLength": 1
+								},
+								"expirationDate": {
+									"type": "integer"
+								},
+								"fileUrl": {
+									"type": ["null"]
+								}
+							},
+							"additionalProperties": false
+						},
+						"education": {
+							"type": ["array", "null"],
+							"items": {
+								"type": "object",
+								"properties": {
+									"id": {
+										"type": "string"
+									},
+									"institute": {
+										"type": "string",
+										"minLength": 1
+									},
+									"yearFrom": {
+										"type": "integer",
+										"minimum": 1
+									},
+									"yearTo": {
+										"type": "integer",
+										"minimum": 1
+									},
+									"programName": {
+										"type": "string",
+										"minLength": 1
+									},
+									"courseWorkUrl": {
+										"type": "string",
+										"minLength": 1
+									},
+									"status": {
+										"type": "string",
+										"minLength": 1
+									}
+								},
+								"additionalProperties": false
+							}
+						},
+						"educationDocuments": {
+							"type": ["array", "null"],
+							"items": {
+								"type": "object",
+								"properties": {
+									"id": {
+										"type": "string"
+									},
+									"name": {
+										"type": "string",
+										"minLength": 1
+									}
+								},
+								"required": ["id"],
+								"additionalProperties": false
+							}
+						},
+						"educationLevel": {
+							"type": ["string", "null"]
+						},
+						"ehrSkills": {
+							"type": ["array", "null"],
+							"items": {
+								"type": "string",
+								"minLength": 1
+							}
+						},
+						"facilities": {
+							"type": ["array", "null"],
+							"items": {
+								"type": "object",
+								"properties": {
+									"id": {
+										"type": "string"
+									},
+									"name": {
+										"type": "string",
+										"minLength": 1
+									},
+									"city": {
+										"type": "string",
+										"minLength": 1
+									},
+									"state": {
+										"type": "string",
+										"minLength": 1
+									}
+								},
+								"additionalProperties": false
+							}
+						},
+						"healthDocuments": {
+							"type": ["array", "null"],
+							"items": {
+								"type": "object",
+								"properties": {
+									"id": {
+										"type": "string"
+									},
+									"name": {
+										"type": "string",
+										"minLength": 1
+									},
+									"reason": {
+										"type": "string",
+										"minLength": 1
+									},
+									"date": {
+										"type": "integer"
+									}
+								},
+								"required": ["id", "name"],
+								"additionalProperties": false
+							}
+						},
+						"liabilityInsurance": {
+							"type": ["object", "null"],
+							"properties": {
+								"company": {
+									"type": "string",
+									"minLength": 1
+								},
+								"policyNumber": {
+									"type": "string",
+									"minLength": 1
+								},
+								"expirationDate": {
+									"type": "integer"
+								}
+							},
+							"additionalProperties": false
+						},
+						"licenses": {
+							"type": ["array", "null"],
+							"items": {
+								"type": "object",
+								"properties": {
+									"id": {
+										"type": "string",
+										"minLength": 1
+									},
+									"licenseType": {
+										"type": "string",
+										"minLength": 1
+									},
+									"licenseBody": {
+										"type": "string",
+										"minLength": 1
+									},
+									"issueDate": {
+										"type": ["number", "null"]
+									},
+									"expirationDate": {
+										"type": "integer"
+									},
+									"licenseNumber": {
+										"type": "string",
+										"minLength": 1
+									},
+									"isCompact": {
+										"type": "boolean"
+									}
+								},
+								"required": ["licenseType", "licenseBody", "expirationDate", "licenseNumber", "isCompact"],
+								"additionalProperties": false
+							}
+						},
+						"organizationMembership": {
+							"type": ["array", "null"],
+							"items": {
+								"type": "object",
+								"properties": {
+									"id": {
+										"type": "string"
+									},
+									"name": {
+										"type": "string",
+										"minLength": 1
+									},
+									"startDate": {
+										"type": "integer"
+									},
+									"endDate": {
+										"type": "integer"
+									}
+								},
+								"required": ["name"],
+								"additionalProperties": false
+							}
+						},
+						"personalStatement": {
+							"description": "A personal statement that is displayed in the users shared briefcase.",
+							"type": "string"
+						},
+						"references": {
+							"type": ["array", "null"],
+							"items": {
+								"type": "object",
+								"properties": {
+									"id": {
+										"type": "string"
+									},
+									"title": {
+										"type": "string",
+										"minLength": 1
+									},
+									"organization": {
+										"type": "string",
+										"minLength": 1
+									},
+									"firstName": {
+										"type": "string",
+										"minLength": 1
+									},
+									"lastName": {
+										"type": "string",
+										"minLength": 1
+									},
+									"phoneNumber": {
+										"type": "string",
+										"minLength": 1
+									},
+									"email": {
+										"type": "string",
+										"minLength": 1
+									}
+								},
+								"additionalProperties": false
+							}
+						},
+						"specialties": {
+							"type": ["array", "null"],
+							"items": {
+								"type": "string",
+								"minLength": 1
+							}
+						},
+						"vehicleInsurance": {
+							"type": ["object", "null"],
+							"properties": {
+								"name": {
+									"type": "string",
+									"minLength": 1
+								},
+								"company": {
+									"type": "string",
+									"minLength": 1
+								},
+								"policyNumber": {
+									"type": "string",
+									"minLength": 1
+								},
+								"expirationDate": {
+									"type": "integer"
+								}
+							},
+							"additionalProperties": false
+						},
+						"w9": {
+							"type": ["string", "null"]
+						},
+						"workExperience": {
+							"type": "object",
+							"properties": {
+								"resumeFileUrl": {
+									"type": "null"
+								},
+								"linkedInUrl": {
+									"type": "string",
+									"minLength": 1
+								}
+							},
+							"additionalProperties": false
+						},
+						"yearsOfExperience": {
+							"type": ["string", "null"]
+						}
+					},
+					"additionalProperties": false
+				}		
+			},
+			"additionalProperties": false,
+			"required": ["profession", "email", "firstName", "lastName"]
+		},
+		"select": {
+			"type": "object",
+			"properties": {
+			}
+		},
+		"organizationId": {
+			"description": "The organization ID the user belongs to. This can only be specified if the user is being added by an organizaiton user or admin.",
+			"type": "string",
+			"minLength": 1
+		},
+		"departmentId": {
+			"description": "The department ID the user belongs to for the specified organization. This can only be specified if the user is being added by an organizaiton user or admin.",
+			"type": "string",
+			"minLength": 1
+		},
+		"thirdPartyId": {
+			"description": "A third party ID. Can only be specified when called by a third party API integration.",
+			"type": "string",
+			"minLength": 1
+		},
+		"recruiter": {
+			"description": "The user's recruiter for the specified organization. This can only be specified if the user is being added by an organizaiton user or admin.",
+			"type": ["object", "string", "null"],
+			"properties": {
+				"firstName": {
+					"description": "The recruiter's first name.",
+					"type": "string",
+					"minLength": 1
+				},
+				"lastName": {
+					"description": "The recruiter's last name.",
+					"type": "string"
+				},
+				"email": {
+					"description": "The recruiter's email.",
+					"type": "string"
+				},
+				"phoneNumber": {
+					"description": "The recruiter's phone number.",
+					"type": "string",
+					"pattern": "^[0-9]*$"
+				}
+			},
+			"additionalProperties": false,
+			"required": ["firstName"]
+		},
+		"password": {
+			"description": "The user's password. This should only be specified when the user is NOT being added by an organization user or an admin.",
+			"type": "string",
+			"minLength": 1
+		},
+		"notes": {
+			"description": "Affiliation notes. This can only be specified if the user is being added by an organizaiton user or admin.",
+			"type": "string",
+			"minLength": 1
+		},
+		"isIrp": {
+			"description": "To say it's an applicant",
+			"type": "boolean"
+		},
+		"thirdPartySystems": {
+			"type": ["array", "null"],
+			"items": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string",
+						"minLength": 1
+					},
+					"name": {
+						"type": "string",
+						"minLength": 1
+					}
+				},
+				"required": ["id", "name"],
+				"additionalProperties": false
+			}
+		}
+	},
+	"required": ["item"],
+	"additionalProperties": false
+}

@@ -1,0 +1,15 @@
+{
+	"$schema": "http://json-schema.org/draft-04/schema#",
+	"type": "object",
+	"properties": {
+		"message": {
+			"description": "The error message.",
+			"type": "string",
+			"minLength": 1
+		}
+	},
+	"required": [
+		"message"
+	],
+	"additionalProperties": false
+}
